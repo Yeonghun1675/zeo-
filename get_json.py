@@ -6,21 +6,33 @@ import json
 
 
 ###############################################
-DATA_DIR = '/home/users/dudgns1675/zeo++/ver3_result'
-OUTPUT_JSON = '/home/users/dudgns1675/zeo++/total_PV.json'
-PROPERTY = 'vol'
+DATA_DIR = '/home/users/dudgns1675/zeo++/omit_result'
 
+PROPERTY = 'vol'
+OUTPUT_JSON = f'/home/users/dudgns1675/zeo++/omit_{PROPERTY}.json'
 ##############################################
 
 def get_property(data):
     global PROPERTY
-    if PROPERTY == 'vol': # Return accessible volume
-        prop = re.search(r"AV_A\^3: (?P<num>[.0-9-]+)", data)
+    if PROPERTY == 'vol': # Return accessible volume fraction
+        #prop = re.search(r"AV_A\^3: (?P<num>[.0-9-]+)", data)
+        prop = re.search(r"AV_Volume_fraction: (?P<num>-?[.0-9]+)", data)
+        return float(prop.group('num'))
+
+    elif PROPERTY == 'sa':
+        prop = re.search(r"ASA_m\^2/cm\^3: (?P<num>-?[.0-9]+)", data)
+        return float(prop.group('num'))
+    
+    elif PROPERTY == 'res':
+        #print (data)
+        #print (data.split())
+        prop = data.split()
+        return prop[1:]
+
     else:
         raise NotImplementError()
     
-    return float(prop.group('num'))
-
+    
 
 def main():
     global DATA_DIR, PROPERTY
@@ -34,7 +46,8 @@ def main():
             data = f.read()
         try:
             prop = get_property(data)
-        except Exception as e:
+            #print ('data', prop)
+        except AttributeError:
             #print (e)
             #print (datafile.name)
             #print (data)
@@ -48,6 +61,6 @@ def main():
 
 if __name__ == '__main__':
     output = main()
-    with open('OUTPUT_JSON', 'w') as f:
+    with open(OUTPUT_JSON, 'w') as f:
         json.dump(output, f)
     print (len(output))

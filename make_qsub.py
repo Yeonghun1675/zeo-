@@ -3,15 +3,15 @@ from pathlib import Path
 from tqdm import tqdm
 
 
-NUM_QSUB = 160 # Number of QSUB file
+NUM_QSUB = 20 # Number of QSUB file
 NUM_CORE = 1 # Number of core
 CORE = 'aa'  # Core property
-PROPERTIES = ['vol', 'sa'] # res : pore diameter, sa : surface area, vol: pore volume
+PROPERTIES = ['vol'] # res : pore diameter, sa : surface area, vol: pore volume
 extent = 'cif'
 
-cssr_path = Path('/home/users/dudgns1675/pormake/primitive_cif')
-save_path = Path('/home/users/dudgns1675/zeo++/ver3_primitive_result')
-qsub_path = Path('/home/users/dudgns1675/zeo++/qsub/')
+cssr_path = Path('/home/users/dudgns1675/pormake/omit_cif_rest')
+save_path = Path('/home/users/dudgns1675/zeo++/omit_result')
+qsub_path = Path('/home/users/dudgns1675/zeo++/qsub_omit_2')
 
 # ZEO++ network file
 zeo_path = Path('/home/users/dudgns1675/zeo++/zeo++-0.2.2/network')
@@ -50,7 +50,7 @@ def zeo_command(cssr, prop):
     elif prop == 'res':
         return f'{str(zeo_path)} -ha -res {str(save_file)} {str(cssr)}\n'
     elif prop == 'vol':
-        return f'{str(zeo_path)} -ha -vol 1.2 1.2 5000 {str(save_file)} {str(cssr)}\n'
+        return f'{str(zeo_path)} -ha -vol 1.2 1.2 50000 {str(save_file)} {str(cssr)}\n'
     else:
         raise ValueError(prop)
 
